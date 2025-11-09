@@ -9,7 +9,7 @@ app = Flask(__name__)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL:
     url = urlparse(DATABASE_URL)
-    conn = pg8000.connect(
+    conn = psycopg2.connect(
         database=url.path[1:],
         user=url.username,
         password=url.password,
@@ -56,10 +56,3 @@ def get_messages():
 
     messages = [{"id": r[0], "text": r[1], "time": r[2].isoformat()} for r in rows]
     return jsonify(messages)
-
-@app.route('/')
-def home():
-    return "Server is running! Use /save (POST) and /messages (GET)"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
